@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Paethor.Infra.Package\PL.Infra.Package.csproj" />
+    <ProjectReference Include="..\PL.Adapter.MySql\PL.Adapter.MySql.csproj" />
+    <ProjectReference Include="..\PL.Domain\PL.Domain.csproj" />
+    <ProjectReference Include="..\PL.Infra.DefaultResult\PL.Infra.DefaultResult.csproj" />
+    <ProjectReference Include="..\PL.Infra.Util\PL.Infra.Util.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,37 @@
+﻿{
+  "profiles": {
+    "DEV": {
+      "commandName": "IISExpress",
+      "launchBrowser": true,
+      "launchUrl": "swagger",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "Env__ConnectionString": "Server=localhost;User Id=root;Database=people_lens;Password=arthur123;",
+        "Env__JWT_Key": "EstaEumaChaveSuperSecretaQueDeveSerMuitoLongaESegura1234567890",
+        "Env__JWT_Issuer": "PeopleLens.Api",
+        "Env__JWT_Audience": "PeopleLensUsers"
+      }
+    },
+    "PRD": {
+      "commandName": "IISExpress",
+      "launchBrowser": true,
+      "launchUrl": "swagger",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "Env__ConnectionString": "Server=localhost;User Id=root;Database=people_lens;Password=arthur123;",
+        "Env__JWT_Key": "EstaEumaChaveSuperSecretaQueDeveSerMuitoLongaESegura1234567890",
+        "Env__JWT_Issuer": "PeopleLens.Api",
+        "Env__JWT_Audience": "PeopleLensUsers"
+      }
+    }
+  },
+  "$schema": "http://json.schemastore.org/launchsettings.json",
+  "iisSettings": {
+    "windowsAuthentication": false,
+    "anonymousAuthentication": true,
+    "iisExpress": {
+      "applicationUrl": "http://localhost:21244",
+      "sslPort": 44345
+    }
+  }
+}
