@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using PL.Application.Interface;
 using PL.Domain.Dto;
 
@@ -27,6 +28,24 @@ namespace PL.API.Controllers
                 return Unauthorized(new { message = "Credenciais inválidas." });
 
             return Ok(loginResponse);
+        }
+
+        [HttpPost("register")]
+        [Authorize]
+        public async Task<IActionResult> Register([FromBody] RegisterDto obj)
+        {
+            try
+            {
+                var userResult = await _userService.Registeruser(obj);
+                if (!userResult.Succeded || !userResult.HasData || userResult.StatusCode != System.Net.HttpStatusCode.OK)
+                    return StatusCode(userResult.StatusCode.GetHashCode(), userResult.LastMessage);
+
+                return Ok(userResult);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Ocorreu um erro interno durante o registro: {ex.Message}");
+            }
         }
     }
 }

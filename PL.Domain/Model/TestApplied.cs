@@ -2,15 +2,14 @@
 
 namespace PL.Domain.Model
 {
-    public class Auth : ICloneable
+    public class TestApplied : ICloneable
     {
         public int? Id { get; set; }
         public EStatus? StatusId { get; set; }
-        public ERole? Role { get; set; }
-        public int? UserId { get; set; }
-        public User? User { get; set; }
-        public string? Username { get; set; }
-        public string? Password { get; set; }
+        public int? CompanyTestId { get; set; }
+        public int? PersonId { get; set; }
+        public DateTime? DateBegin { get; set; }
+        public DateTime? DateEnd { get; set; }
         public DateTime? CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
 

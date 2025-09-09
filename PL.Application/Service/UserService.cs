@@ -1,5 +1,7 @@
 ﻿using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Org.BouncyCastle.Asn1.Ocsp;
+using PL.Adapter.PostgreSQL.DataSource;
 using PL.Adapter.PostgreSQL.Interface;
 using PL.Application.Interface;
 using PL.Domain.Dto;
@@ -20,14 +22,23 @@ namespace PL.Application.Service
     public class UserService : IUserService
     {
         private readonly IUserDataSource _dataSource;
+        private readonly IPersonService _personService;
+        private readonly ICompanyService _companyService;
+        private readonly IPersonCompanyService _personCompanyService;
         private readonly IOptions<EnvironmentSettings> _envOptions;
 
         public UserService(
             IOptions<EnvironmentSettings> envOptions, 
-            IUserDataSource? dataSource)
+            IUserDataSource? dataSource,
+            IPersonService personService,
+            ICompanyService companyService,
+            IPersonCompanyService personCompanyService)
         {
             _dataSource = dataSource;
             _envOptions = envOptions;
+            _personService = personService;
+            _companyService = companyService;
+            _personCompanyService = personCompanyService;
         }
 
         private IEnumerable<Filter> GetFilters(UserFilter filter)
@@ -87,6 +98,7 @@ namespace PL.Application.Service
         {
             try
             {
+                obj.CreatedAt = obj.UpdatedAt = DateTime.UtcNow;
                 obj.StatusId = EStatus.Ativo;
                 var result = await _dataSource.Insert(obj);
                 return result;
@@ -94,6 +106,104 @@ namespace PL.Application.Service
             catch (Exception ex)
             {
                 return DefaultResult<int>.Error("Houve uma falha ao cadastrar o usuário.", ex);
+            }
+        }
+
+        public async Task<IResult<bool>> Update(Domain.Model.User obj)
+        {
+            try
+            {
+                if (!obj.Id.HasValue || obj.Id <= 0)
+                    return DefaultResult<bool>.Error("Falta referenciar qual o id para editar o usuário.", new Exception($"Update: newObj.Id == (null/0)"));
+
+                var oldCompanyResult = await Search(new UserFilter { Id = obj.Id });
+                if (!oldCompanyResult.Succeded || oldCompanyResult.Data == null)
+                    return DefaultResult<bool>.Break("Usuário não encontrado para atualização.");
+
+                var oldObj = oldCompanyResult.Data.First();
+                var newObj = (Domain.Model.User)oldCompanyResult.Data.First().Clone();
+
+                if (obj.PersonId != null && obj.PersonId > 0)
+                    newObj.PersonId = obj.PersonId;
+                if (obj.StatusId != null && obj.StatusId > 0)
+                    newObj.StatusId = obj.StatusId;
+                if (obj.RoleId != null && obj.RoleId > 0)
+                    newObj.RoleId = obj.RoleId;
+                if (!string.IsNullOrEmpty(obj.Email))
+                    newObj.Email = obj.Email;
+                if (!string.IsNullOrEmpty(obj.Password))
+                    newObj.Password = obj.Password;
+
+                var filters = GetFilters(new UserFilter() { Id = obj.Id });
+                return await _dataSource.Update(filters, oldObj, newObj);
+            }
+            catch (Exception ex)
+            {
+                return DefaultResult<bool>.Error("Houve uma falha ao editar o usuário.", ex);
+            }
+        }
+
+        public async Task<IResult<User>> Registeruser(RegisterDto obj)
+        {
+            if (string.IsNullOrWhiteSpace(obj.Email))
+                return DefaultResult<User>.Break("O email é obrigatório.");
+            if (string.IsNullOrWhiteSpace(obj.Password))
+                return DefaultResult<User>.Break("A senha é obrigatória.");
+            if (string.IsNullOrWhiteSpace(obj.Name))
+                return DefaultResult<User>.Break("O nome é obrigatório.");
+            if (obj.Birthday == null || obj.Birthday <= DateTime.MinValue)
+                return DefaultResult<User>.Break("A data de nascimento é obrigatória.");
+            if (obj.CompanyId == null || obj.CompanyId <= 0)
+                return DefaultResult<User>.Break("O id da empresa é obrigatório.");
+
+            try
+            {
+                var person = new Person
+                {
+                    Name = obj.Name,
+                    Birthday = obj.Birthday
+                };
+                var personResult = await _personService.Insert(person);
+                if (!personResult.Succeded || !personResult.HasData || personResult.StatusCode != System.Net.HttpStatusCode.OK)
+                    return personResult.ChangeType<User>(default);
+
+                var personId = personResult.Data;
+
+                var companyResult = await _companyService.Search(new CompanyFilter { Id = obj.CompanyId });
+                if (!companyResult.Succeded || !companyResult.HasData || companyResult.StatusCode != System.Net.HttpStatusCode.OK)
+                    return companyResult.ChangeType<User>(default);
+
+                var defaultCompanyId = companyResult.Data.First().Id.Value;
+
+                var personCompany = new PersonCompany
+                {
+                    PersonId = personId,
+                    CompanyId = defaultCompanyId,
+                    StatusId = EStatus.Ativo
+                };
+                var personCompanyResult = await _personCompanyService.Insert(personCompany);
+                if (!personCompanyResult.Succeded || !personCompanyResult.HasData || personCompanyResult.StatusCode != System.Net.HttpStatusCode.OK)
+                    return personCompanyResult.ChangeType<User>(default);
+
+                var user = new User
+                {
+                    PersonId = personId,
+                    Email = obj.Email,
+                    Password = obj.Password,
+                    RoleId = obj.RoleId != null ? obj.RoleId : 3,
+                    StatusId = EStatus.Ativo
+                };
+
+                var userResult = await Insert(user);
+                if (!userResult.Succeded || !userResult.HasData || userResult.StatusCode != System.Net.HttpStatusCode.OK)
+                    return userResult.ChangeType<User>(default);
+
+                user.Password = null;
+                return DefaultResult<User>.Create(user);
+            }
+            catch (Exception ex)
+            {
+                return DefaultResult<User>.Error("Ocorreu um erro inesperado durante o cadastro do usuário.", ex);
             }
         }
 

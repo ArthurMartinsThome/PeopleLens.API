@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using PL.Adapter.PostgreSQL.DataSource;
+using PL.Adapter.PostgreSQL.Interface;
 using PL.Application.Interface;
 using PL.Application.Service;
 using PL.Infra.Util.Model;
@@ -111,10 +113,39 @@ builder.Services.AddAuthorization();
 // ------------------- Injeção de dependências -------------------
 // Serviços de aplicação
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<ICompanyService, CompanyService>();
+builder.Services.AddScoped<ICompanyTestService, CompanyTestService>();
+builder.Services.AddScoped<IKeyConfigurationQuestionService, KeyConfigurationQuestionService>();
+builder.Services.AddScoped<IPersonCompanyService, PersonCompanyService>();
+builder.Services.AddScoped<IPersonService, PersonService>();
+builder.Services.AddScoped<IQuestionConfigurationService, QuestionConfigurationService>();
+builder.Services.AddScoped<IQuestionService, QuestionService>();
+builder.Services.AddScoped<IQuestionResponseOptionService, QuestionResponseOptionService>();
+builder.Services.AddScoped<IResponseService, ResponseService>();
+builder.Services.AddScoped<IResponseOptionService, ResponseOptionService>();
+builder.Services.AddScoped<IResponseTypeService, ResponseTypeService>();
+builder.Services.AddScoped<ITestAppliedService, TestAppliedService>();
+builder.Services.AddScoped<ITestService, TestService>();
+builder.Services.AddScoped<ITestQuestionService, TestQuestionService>();
+builder.Services.AddScoped<ITestTypeService, TestTypeService>();
 
 // Fontes de dados (PostgreSQL)
-builder.Services.AddScoped<PL.Adapter.PostgreSQL.Interface.IUserDataSource, PL.Adapter.PostgreSQL.DataSource.UserDataSource>();
-
+builder.Services.AddScoped<IUserDataSource, UserDataSource>();
+builder.Services.AddScoped<ICompanyDataSource, CompanyDataSource>();
+builder.Services.AddScoped<ICompanyTestDataSource, CompanyTestDataSource>();
+builder.Services.AddScoped<IKeyConfigurationQuestionDataSource, KeyConfigurationQuestionDataSource>();
+builder.Services.AddScoped<IPersonCompanyDataSource, PersonCompanyDataSource>();
+builder.Services.AddScoped<IPersonDataSource, PersonDataSource>();
+builder.Services.AddScoped<IQuestionConfigurationDataSource, QuestionConfigurationDataSource>();
+builder.Services.AddScoped<IQuestionDataSource, QuestionDataSource>();
+builder.Services.AddScoped<IQuestionResponseOptionDataSource, QuestionResponseOptionDataSource>();
+builder.Services.AddScoped<IResponseDataSource, ResponseDataSource>();
+builder.Services.AddScoped<IResponseOptionDataSource, ResponseOptionDataSource>();
+builder.Services.AddScoped<IResponseTypeDataSource, ResponseTypeDataSource>();
+builder.Services.AddScoped<ITestAppliedDataSource, TestAppliedDataSource>();
+builder.Services.AddScoped<ITestDataSource, TestDataSource>();
+builder.Services.AddScoped<ITestQuestionDataSource, TestQuestionDataSource>();
+builder.Services.AddScoped<ITestTypeDataSource, TestTypeDataSource>();
 // ---------------------------------------------------------------
 
 builder.Services.AddCors(options =>

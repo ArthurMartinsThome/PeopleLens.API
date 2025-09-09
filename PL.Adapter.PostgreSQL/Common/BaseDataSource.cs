@@ -191,7 +191,7 @@ namespace PL.Adapter.PostgreSQL.Common
                 var parmList = new Dapper.DynamicParameters();
                 foreach (var item in valuePairs)
                 {
-                    updateList.Add($"{item.Key}=@p_{item.Key.Replace("`", "")}");
+                    updateList.Add($"\"{item.Key}\"=@p_{item.Key.Replace("`", "")}");
                     parmList.Add($"@p_{item.Key.Replace("`", "")}", item.Value);
                 }
                 foreach (var item in filterHandler.Parameters)
@@ -200,7 +200,7 @@ namespace PL.Adapter.PostgreSQL.Common
                     sql = sql.Replace("[where]", $"WHERE {filterHandler.SqlFilters}");
                 else
                     sql = sql.Replace("[where]", string.Empty);
-                sql = sql.Replace("[fieldsandvalues]", $"SET {string.Join(", ", updateList)}");
+                sql = sql.Replace("[fieldsandvalues]", $"{string.Join(", ", updateList)}");
                 var data = await connector.UpdateAsync(sql, parmList);
 
                 return DefaultResult<bool>.Create(data);

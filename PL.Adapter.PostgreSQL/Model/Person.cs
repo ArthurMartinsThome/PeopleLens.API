@@ -1,0 +1,16 @@
+﻿using PL.Infra.Util;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace PL.Adapter.PostgreSQL.Model
+{
+    [Table("person")]
+    internal class Person
+    {
+        [FilterIdentifier("Id")]
+        public int? id { get; set; }
+        public string? name { get; set; }
+        public DateTime? birthday { get; set; }
+        public DateTime? created_at { get; set; }
+        public DateTime? updated_at { get; set; }
+    }
+}

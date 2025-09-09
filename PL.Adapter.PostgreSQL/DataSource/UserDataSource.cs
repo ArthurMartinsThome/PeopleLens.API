@@ -17,42 +17,42 @@ namespace PL.Adapter.PostgreSQL.DataSource
         public UserDataSource(IOptions<EnvironmentSettings> envOptions) : base(envOptions.Value.ConnectionString) { }
 
         #region SQL
-        private const string _TableName = $"\"user\"";
-        private const string _FieldId = $"\"id\"";
-        private const string _FieldPersonId = $"\"person_id\"";
-        private const string _FieldStatusId = $"\"status_id\"";
-        private const string _FieldEmail = $"\"email\"";
-        private const string _FieldPassword = $"\"password\"";
-        private const string _FieldCreatedAt = $"\"created_at\"";
-        private const string _FieldUpdatedAt = $"\"updated_at\"";
-        private const string _FieldRoleId = $"\"role_id\"";
+        private const string _TableName = "user";
+        private const string _FieldId = "id";
+        private const string _FieldPersonId = "person_id";
+        private const string _FieldStatusId = "status_id";
+        private const string _FieldEmail = "email";
+        private const string _FieldPassword = "password";
+        private const string _FieldCreatedAt = "created_at";
+        private const string _FieldUpdatedAt = "updated_at";
+        private const string _FieldRoleId = "role_id";
 
         private IEnumerable<string> _AllFields = new[]
         {
-            $"{_TableName}.{_FieldId}",
-            $"{_TableName}.{_FieldPersonId}",
-            $"{_TableName}.{_FieldStatusId}",
-            $"{_TableName}.{_FieldEmail}",
-            $"{_TableName}.{_FieldPassword}",
-            $"{_TableName}.{_FieldCreatedAt}",
-            $"{_TableName}.{_FieldUpdatedAt}",
-            $"{_TableName}.{_FieldRoleId}"
+            $"\"{_TableName}\".\"{_FieldId}\"",
+            $"\"{_TableName}\".\"{_FieldPersonId}\"",
+            $"\"{_TableName}\".\"{_FieldStatusId}\"",
+            $"\"{_TableName}\".\"{_FieldEmail}\"",
+            $"\"{_TableName}\".\"{_FieldPassword}\"",
+            $"\"{_TableName}\".\"{_FieldCreatedAt}\"",
+            $"\"{_TableName}\".\"{_FieldUpdatedAt}\"",
+            $"\"{_TableName}\".\"{_FieldRoleId}\""
         };
 
         private const string SearchSql = $@"
             SELECT 
                 [fields]
-            FROM {_TableName}
+            FROM ""{_TableName}""
                 [where]";
         private const string InsertSql = $@"
             INSERT INTO 
-                {_TableName}
+                ""{_TableName}""
                 ({_FieldPersonId},{_FieldStatusId},{_FieldEmail},{_FieldPassword},{_FieldCreatedAt},{_FieldUpdatedAt},{_FieldRoleId})
             VALUES
                 (@{_FieldPersonId},@{_FieldStatusId},@{_FieldEmail},@{_FieldPassword},@{_FieldCreatedAt},@{_FieldUpdatedAt},@{_FieldRoleId})";
         private const string UpdateSql = $@"
             UPDATE 
-                {_TableName}
+                ""{_TableName}""
             SET
                 [fieldsandvalues]
                 [where]";

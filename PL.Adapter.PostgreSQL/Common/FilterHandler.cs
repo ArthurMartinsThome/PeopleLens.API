@@ -44,8 +44,16 @@ namespace PL.Adapter.PostgreSQL.Common
                             Parameters.Add($"{item._Fields.ElementAt(0)}{index}", $"{item._Values.ElementAt(0)}%");
                             break;
                         case EOperator.In:
-                            tempFilterSql.Add($"{left} IN @{item._Fields.ElementAt(0)}{index}");
-                            Parameters.Add($"{item._Fields.ElementAt(0)}{index}", item._Values);
+                            var inParameterNames = item._Values
+                                .Select((value, valueIndex) => $"{item._Fields.ElementAt(0)}{index}_{valueIndex}")
+                                .ToList();
+
+                            tempFilterSql.Add($"{left} IN ({string.Join(", ", inParameterNames.Select(p => $"@{p}"))})");
+
+                            for (int i = 0; i < item._Values.Count(); i++)
+                            {
+                                Parameters.Add(inParameterNames[i], item._Values.ElementAt(i));
+                            }
                             break;
                         case EOperator.NotEqual:
                             tempFilterSql.Add($"{left} <> @{item._Fields.ElementAt(0)}{index}");
