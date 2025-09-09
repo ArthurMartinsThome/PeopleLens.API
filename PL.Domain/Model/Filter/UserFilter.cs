@@ -1,10 +1,20 @@
-﻿namespace PL.Domain.Model.Filter
+﻿using PL.Domain.Model.Enum;
+
+namespace PL.Domain.Model.Filter
 {
     public class UserFilter
     {
         public int? Id { get; set; }
         public List<int>? Ids { get; set; }
-        public string? Name { get; set; }
-        public string? Cellphone { get; set; }
+        public List<int?> StatusId { get; set; }
+        public ERole? RoleId { get; set; }
+        public int? PersonId { get; set; }
+        public string? Email { get; set; }
+        public string? Password { get; set; }
+        public DateTime? CreatedTo { get; set; }
+        public DateTime? CreatedFrom { get; set; }
+
+        public bool HideInactive { get; set; } = true;
+        public bool HideDeleted { get; set; } = true;
     }
 }

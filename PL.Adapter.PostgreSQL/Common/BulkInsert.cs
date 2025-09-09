@@ -2,7 +2,7 @@
 using System.Globalization;
 using System.Reflection;
 
-namespace PL.Adapter.MySql.Common
+namespace PL.Adapter.PostgreSQL.Common
 {
     internal static class BulkInsert
     {

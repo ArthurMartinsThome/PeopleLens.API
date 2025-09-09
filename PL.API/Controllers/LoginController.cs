@@ -8,11 +8,11 @@ namespace PL.API.Controllers
     [Route("api/[controller]")]
     public class LoginController : ControllerBase
     {
-        private readonly IAuthService _authService;
+        private readonly IUserService _userService;
 
-        public LoginController(IAuthService authService)
+        public LoginController(IUserService userService)
         {
-            _authService = authService;
+            _userService = userService;
         }
 
         [HttpPost]
@@ -21,7 +21,7 @@ namespace PL.API.Controllers
             if (string.IsNullOrEmpty(obj.Username) || string.IsNullOrEmpty(obj.PasswordHash))
                 return BadRequest(new { message = "Email e senha são obrigatórios." });
 
-            var loginResponse = await _authService.AuthenticateAsync(obj.Username, obj.PasswordHash);
+            var loginResponse = await _userService.AuthenticateAsync(obj.Username, obj.PasswordHash);
 
             if (loginResponse == null)
                 return Unauthorized(new { message = "Credenciais inválidas." });

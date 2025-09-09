@@ -6,7 +6,8 @@
       "launchUrl": "swagger",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
-        "Env__ConnectionString": "Server=localhost;User Id=root;Database=people_lens;Password=arthur123;",
+        //"Env__ConnectionString": "Server=localhost;User Id=root;Database=people_lens;Password=arthur123;",
+        "Env__ConnectionString": "Host=localhost;Port=5432;Database=people_lens;Username=postgres;Password=root",
         "Env__JWT_Key": "EstaEumaChaveSuperSecretaQueDeveSerMuitoLongaESegura1234567890",
         "Env__JWT_Issuer": "PeopleLens.Api",
         "Env__JWT_Audience": "PeopleLensUsers"

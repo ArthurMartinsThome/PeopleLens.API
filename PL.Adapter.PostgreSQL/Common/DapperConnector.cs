@@ -1,8 +1,8 @@
 ﻿using Dapper;
-using MySql.Data.MySqlClient;
+using Npgsql;
 using System.Data;
 
-namespace PL.Adapter.MySql.Common
+namespace PL.Adapter.PostgreSQL.Common
 {
     internal class DapperConnector
     {
@@ -17,7 +17,7 @@ namespace PL.Adapter.MySql.Common
             try
             {
                 var table = default(IEnumerable<T>);
-                using (var connection = new MySqlConnection(_connectionString))
+                using (var connection = new NpgsqlConnection(_connectionString))
                 {
                     connection.Open();
                     table = connection.Query<T>(sql, parm).ToArray();
@@ -35,7 +35,7 @@ namespace PL.Adapter.MySql.Common
             try
             {
                 var table = default(IEnumerable<T>);
-                using (var connection = new MySqlConnection(_connectionString))
+                using (var connection = new NpgsqlConnection(_connectionString))
                 {
                     connection.Open();
                     table = await connection.QueryAsync<T>(sql, parm);
@@ -44,7 +44,7 @@ namespace PL.Adapter.MySql.Common
             }
             catch (Exception ex)
             {
-                throw;
+                throw ex;
             }
         }
 
@@ -52,10 +52,10 @@ namespace PL.Adapter.MySql.Common
         {
             try
             {
-                using (var connection = new MySqlConnection(_connectionString))
+                using (var connection = new NpgsqlConnection(_connectionString))
                 {
                     connection.Open();
-                    return connection.ExecuteScalar<int>($"{sql}; SELECT LAST_INSERT_ID();", parm);
+                    return connection.ExecuteScalar<int>($"{sql} RETURNING id", parm);
                 }
             }
             catch (Exception ex)
@@ -68,10 +68,10 @@ namespace PL.Adapter.MySql.Common
         {
             try
             {
-                using (var connection = new MySqlConnection(_connectionString))
+                using (var connection = new NpgsqlConnection(_connectionString))
                 {
                     connection.Open();
-                    return await connection.ExecuteScalarAsync<int>($"{sql}; SELECT LAST_INSERT_ID();", parm);
+                    return await connection.ExecuteScalarAsync<int>($"{sql} RETURNING id", parm);
                 }
             }
             catch (Exception ex)
@@ -84,10 +84,10 @@ namespace PL.Adapter.MySql.Common
         {
             try
             {
-                using (var connection = new MySqlConnection(_connectionString))
+                using (var connection = new NpgsqlConnection(_connectionString))
                 {
                     connection.Open();
-                    return await connection.ExecuteScalarAsync<long>($"{sql}; SELECT LAST_INSERT_ID();", parm);
+                    return await connection.ExecuteScalarAsync<long>($"{sql} RETURNING id", parm);
                 }
             }
             catch (Exception ex)
@@ -100,10 +100,10 @@ namespace PL.Adapter.MySql.Common
         {
             try
             {
-                using (var connection = new MySqlConnection(_connectionString))
+                using (var connection = new NpgsqlConnection(_connectionString))
                 {
                     connection.Open();
-                    return await connection.ExecuteScalarAsync<int>($"{sql}; SELECT LAST_INSERT_ID();");
+                    return await connection.ExecuteScalarAsync<int>($"{sql} RETURNING id");
                 }
             }
             catch (Exception ex)
@@ -116,7 +116,7 @@ namespace PL.Adapter.MySql.Common
         {
             try
             {
-                using (var connection = new MySqlConnection(_connectionString))
+                using (var connection = new NpgsqlConnection(_connectionString))
                 {
                     connection.Open();
                     await connection.ExecuteAsync(sql);
@@ -131,13 +131,13 @@ namespace PL.Adapter.MySql.Common
 
         public void InsertVoid(string sql, object parm)
         {
-            using (var connection = new MySqlConnection(_connectionString))
+            using (var connection = new NpgsqlConnection(_connectionString))
                 connection.Execute(sql, parm);
         }
 
         public async Task<int> InsertRowsAffectedAsync(string sql, object parm)
         {
-            using (var connection = new MySqlConnection(_connectionString))
+            using (var connection = new NpgsqlConnection(_connectionString))
                 return await connection.ExecuteAsync(sql, parm);
         }
 
@@ -145,7 +145,7 @@ namespace PL.Adapter.MySql.Common
         {
             try
             {
-                return await _connection.ExecuteScalarAsync<int>($"{sql}; SELECT LAST_INSERT_ID();", parm, dbTransaction);
+                return await _connection.ExecuteScalarAsync<int>($"{sql} RETURNING id", parm, dbTransaction);
             }
             catch (Exception ex)
             {
@@ -157,7 +157,7 @@ namespace PL.Adapter.MySql.Common
         {
             try
             {
-                using (var connection = new MySqlConnection(_connectionString))
+                using (var connection = new NpgsqlConnection(_connectionString))
                 {
                     connection.Open();
                     connection.Execute(sql, parm);
@@ -174,7 +174,7 @@ namespace PL.Adapter.MySql.Common
         {
             try
             {
-                using (var connection = new MySqlConnection(_connectionString))
+                using (var connection = new NpgsqlConnection(_connectionString))
                 {
                     connection.Open();
                     await connection.ExecuteAsync(sql, parm);
@@ -204,7 +204,7 @@ namespace PL.Adapter.MySql.Common
         {
             try
             {
-                using (var connection = new MySqlConnection(_connectionString))
+                using (var connection = new NpgsqlConnection(_connectionString))
                 {
                     connection.Open();
                     connection.Execute(sql, parm);
@@ -221,7 +221,7 @@ namespace PL.Adapter.MySql.Common
         {
             try
             {
-                using (var connection = new MySqlConnection(_connectionString))
+                using (var connection = new NpgsqlConnection(_connectionString))
                 {
                     connection.Open();
                     await connection.ExecuteAsync(sql, parm);

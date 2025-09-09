@@ -1,7 +1,7 @@
 ﻿using PL.Domain.Model.Enum;
 using PL.Infra.Model.Filter;
 
-namespace PL.Adapter.MySql.Common
+namespace PL.Adapter.PostgreSQL.Common
 {
     internal class FilterHandler
     {
@@ -25,9 +25,9 @@ namespace PL.Adapter.MySql.Common
                         fieldName = item._NestedFieldName;
                     string left;
                     if (string.IsNullOrEmpty(item._Alias))
-                        left = item._Fields.ElementAt(0);
+                        left = $"\"{fieldName}\"";
                     else
-                        left = $"{item._Alias}.{fieldName}";
+                        left = $"\"{item._Alias}\".\"{fieldName}\"";
                     index++;
                     switch (item._Operator)
                     {
@@ -48,7 +48,7 @@ namespace PL.Adapter.MySql.Common
                             Parameters.Add($"{item._Fields.ElementAt(0)}{index}", item._Values);
                             break;
                         case EOperator.NotEqual:
-                            tempFilterSql.Add($"{left} != @{item._Fields.ElementAt(0)}{index}");
+                            tempFilterSql.Add($"{left} <> @{item._Fields.ElementAt(0)}{index}");
                             Parameters.Add($"{item._Fields.ElementAt(0)}{index}", item._Values.ElementAt(0));
                             break;
                         case EOperator.NotIn:

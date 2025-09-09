@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Options;
-using PL.Adapter.MySql.Common;
-using PL.Adapter.MySql.Interface;
-using PL.Adapter.MySql.Model;
+using PL.Adapter.PostgreSQL.Common;
+using PL.Adapter.PostgreSQL.Interface;
+using PL.Adapter.PostgreSQL.Model;
 using PL.Domain.Model.Enum;
 using PL.Infra.DefaultResult;
 using PL.Infra.DefaultResult.Interface;
@@ -10,45 +10,50 @@ using PL.Infra.Util;
 using PL.Infra.Util.Model;
 using PL.Infra.Util.Model.Paged;
 
-namespace PL.Adapter.MySql.DataSource
+namespace PL.Adapter.PostgreSQL.DataSource
 {
     public class UserDataSource : BaseDataSource, IUserDataSource
     {
         public UserDataSource(IOptions<EnvironmentSettings> envOptions) : base(envOptions.Value.ConnectionString) { }
 
         #region SQL
-        private const string _TableName = $"user";
-        private const string _FieldId = $"id";
-        private const string _FieldStatusId = $"status_id";
-        private const string _FieldName = $"name";
-        private const string _FieldCellphone = $"cellphone";
-        private const string _FieldCreatedAt = $"created_at";
-        private const string _FieldUpdatedAt = $"updated_at";
+        private const string _TableName = $"\"user\"";
+        private const string _FieldId = $"\"id\"";
+        private const string _FieldPersonId = $"\"person_id\"";
+        private const string _FieldStatusId = $"\"status_id\"";
+        private const string _FieldEmail = $"\"email\"";
+        private const string _FieldPassword = $"\"password\"";
+        private const string _FieldCreatedAt = $"\"created_at\"";
+        private const string _FieldUpdatedAt = $"\"updated_at\"";
+        private const string _FieldRoleId = $"\"role_id\"";
 
         private IEnumerable<string> _AllFields = new[]
         {
             $"{_TableName}.{_FieldId}",
+            $"{_TableName}.{_FieldPersonId}",
             $"{_TableName}.{_FieldStatusId}",
-            $"{_TableName}.{_FieldName}",
-            $"{_TableName}.{_FieldCellphone}",
+            $"{_TableName}.{_FieldEmail}",
+            $"{_TableName}.{_FieldPassword}",
             $"{_TableName}.{_FieldCreatedAt}",
-            $"{_TableName}.{_FieldUpdatedAt}"
+            $"{_TableName}.{_FieldUpdatedAt}",
+            $"{_TableName}.{_FieldRoleId}"
         };
+
         private const string SearchSql = $@"
             SELECT 
                 [fields]
             FROM {_TableName}
-                [where]
-                [limit]";
+                [where]";
         private const string InsertSql = $@"
             INSERT INTO 
                 {_TableName}
-                ({_FieldStatusId},{_FieldName},{_FieldCellphone},{_FieldCreatedAt},{_FieldUpdatedAt})
+                ({_FieldPersonId},{_FieldStatusId},{_FieldEmail},{_FieldPassword},{_FieldCreatedAt},{_FieldUpdatedAt},{_FieldRoleId})
             VALUES
-                (@{_FieldStatusId},@{_FieldName},@{_FieldCellphone},@{_FieldCreatedAt},@{_FieldUpdatedAt})";
+                (@{_FieldPersonId},@{_FieldStatusId},@{_FieldEmail},@{_FieldPassword},@{_FieldCreatedAt},@{_FieldUpdatedAt},@{_FieldRoleId})";
         private const string UpdateSql = $@"
             UPDATE 
                 {_TableName}
+            SET
                 [fieldsandvalues]
                 [where]";
 
@@ -59,11 +64,13 @@ namespace PL.Adapter.MySql.DataSource
             return new Domain.Model.User
             {
                 Id = obj.id,
+                PersonId = obj.person_id,
                 StatusId = (EStatus)obj.status_id,
-                Name = obj.name,
-                Cellphone = obj.cellphone,
+                Email = obj.email,
+                Password = obj.password,
                 CreatedAt = obj.created_at,
-                UpdatedAt = obj.updated_at
+                UpdatedAt = obj.updated_at,
+                RoleId = obj.role_id
             };
         }
         private User Convert(Domain.Model.User obj)
@@ -71,11 +78,13 @@ namespace PL.Adapter.MySql.DataSource
             return new User
             {
                 id = obj.Id,
+                person_id = obj.PersonId,
                 status_id = obj.StatusId.GetHashCode(),
-                name = obj.Name,
-                cellphone = obj.Cellphone,
+                email = obj.Email,
+                password = obj.Password,
                 created_at = obj.CreatedAt,
-                updated_at = obj.UpdatedAt
+                updated_at = obj.UpdatedAt,
+                role_id = obj.RoleId
             };
         }
 
@@ -140,10 +149,12 @@ namespace PL.Adapter.MySql.DataSource
                 var updateList = new Dictionary<string, object>();
                 if (oldObj.StatusId != newObj.StatusId)
                     updateList.Add(_FieldStatusId, newObj.StatusId);
-                if (oldObj.Name != newObj.Name)
-                    updateList.Add(_FieldName, newObj.Name?.Trim());
-                if (oldObj.Cellphone != newObj.Cellphone)
-                    updateList.Add(_FieldCellphone, newObj.Cellphone?.Trim());
+                if (oldObj.Email != newObj.Email)
+                    updateList.Add(_FieldEmail, newObj.Email?.Trim());
+                if (oldObj.Password != newObj.Password)
+                    updateList.Add(_FieldPassword, newObj.Password?.Trim());
+                if (oldObj.RoleId != newObj.RoleId)
+                    updateList.Add(_FieldRoleId, newObj.RoleId);
 
                 updateList.Add(_FieldUpdatedAt, DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss"));
                 var parsedFilters = FilterParser.Parse<Model.User>(filters);

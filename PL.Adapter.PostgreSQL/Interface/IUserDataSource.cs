@@ -2,7 +2,7 @@
 using PL.Infra.Model.Filter;
 using PL.Infra.Util.Model.Paged;
 
-namespace PL.Adapter.MySql.Interface
+namespace PL.Adapter.PostgreSQL.Interface
 {
     public interface IUserDataSource
     {

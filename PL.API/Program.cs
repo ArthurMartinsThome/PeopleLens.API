@@ -1,8 +1,6 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using PL.Adapter.MySql.DataSource;
-using PL.Adapter.MySql.Interface;
 using PL.Application.Interface;
 using PL.Application.Service;
 using PL.Infra.Util.Model;
@@ -112,12 +110,10 @@ builder.Services.AddAuthorization();
 
 // ------------------- Injeção de dependências -------------------
 // Serviços de aplicação
-builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IUserService, UserService>();
 
-// Fontes de dados (MySql)
-builder.Services.AddScoped<IAuthDataSource, AuthDataSource>();
-builder.Services.AddScoped<IUserDataSource, UserDataSource>();
+// Fontes de dados (PostgreSQL)
+builder.Services.AddScoped<PL.Adapter.PostgreSQL.Interface.IUserDataSource, PL.Adapter.PostgreSQL.DataSource.UserDataSource>();
 
 // ---------------------------------------------------------------
 

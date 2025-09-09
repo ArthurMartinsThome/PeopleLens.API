@@ -1,9 +1,9 @@
-﻿using System.Data;
-using PL.Infra.DefaultResult;
+﻿using PL.Infra.DefaultResult;
 using PL.Infra.DefaultResult.Interface;
 using PL.Infra.Model.Filter;
+using System.Data;
 
-namespace PL.Adapter.MySql.Common
+namespace PL.Adapter.PostgreSQL.Common
 {
     public class BaseDataSource
     {
