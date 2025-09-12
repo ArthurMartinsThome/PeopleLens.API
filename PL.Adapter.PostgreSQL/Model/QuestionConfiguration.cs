@@ -11,7 +11,7 @@ namespace PL.Adapter.PostgreSQL.Model
         [FilterIdentifier("QuestionId")]
         public int? question_id { get; set; }
         [FilterIdentifier("KeyConfigId")]
-        public int? key_config_id { get; set; }
+        public int? key_configuration_question_id { get; set; }
         [FilterIdentifier("Value")]
         public string? value { get; set; }
     }

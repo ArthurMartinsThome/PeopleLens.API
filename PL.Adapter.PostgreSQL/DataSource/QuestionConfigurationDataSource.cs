@@ -46,8 +46,6 @@ namespace PL.Adapter.PostgreSQL.DataSource
             SET
                 [fieldsandvalues]
             [where]";
-        private const string DeleteSql = $@"
-            DELETE FROM {_TableName} [where]";
 
         #endregion
 
@@ -57,7 +55,7 @@ namespace PL.Adapter.PostgreSQL.DataSource
             {
                 Id = obj.id,
                 QuestionId = obj.question_id,
-                KeyConfigId = obj.key_config_id,
+                KeyConfigurationQuestionId = obj.key_configuration_question_id,
                 Value = obj.value
             };
         }
@@ -67,7 +65,7 @@ namespace PL.Adapter.PostgreSQL.DataSource
             {
                 id = obj.Id,
                 question_id = obj.QuestionId,
-                key_config_id = obj.KeyConfigId,
+                key_configuration_question_id = obj.KeyConfigurationQuestionId,
                 value = obj.Value
             };
         }
@@ -133,8 +131,8 @@ namespace PL.Adapter.PostgreSQL.DataSource
                 var updateList = new Dictionary<string, object>();
                 if (oldObj.QuestionId != newObj.QuestionId)
                     updateList.Add(_FieldQuestionId, newObj.QuestionId);
-                if (oldObj.KeyConfigId != newObj.KeyConfigId)
-                    updateList.Add(_FieldKeyConfigId, newObj.KeyConfigId);
+                if (oldObj.KeyConfigurationQuestionId != newObj.KeyConfigurationQuestionId)
+                    updateList.Add(_FieldKeyConfigId, newObj.KeyConfigurationQuestionId);
                 if (oldObj.Value != newObj.Value)
                     updateList.Add(_FieldValue, newObj.Value);
 

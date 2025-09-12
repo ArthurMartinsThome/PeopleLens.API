@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PL.Application.Interface;
+using PL.Domain.Dto.CreateTestDto;
 
 namespace PL.API.Controllers
 {
@@ -18,6 +19,14 @@ namespace PL.API.Controllers
         public async Task<IActionResult> getTestFull([FromQuery] int testId)
         {
             var result = await _testService.GetTestFull(testId);
+
+            return StatusCode(result.StatusCode.GetHashCode(), result);
+        }
+
+        [HttpPost("create")]
+        public async Task<IActionResult> CreateTest([FromBody] TestCreateRequestDto obj)
+        {
+            var result = await _testService.CreateTest(obj);
 
             return StatusCode(result.StatusCode.GetHashCode(), result);
         }

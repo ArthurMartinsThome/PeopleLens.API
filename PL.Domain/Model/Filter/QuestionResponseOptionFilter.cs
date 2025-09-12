@@ -4,6 +4,8 @@
     {
         public int? Id { get; set; }
         public int? QuestionId { get; set; }
-        public int? ResponseOptionId { get; set; }
+        public List<int>? QuestionIds { get; set; }
+        public int? ResponseTypeProfileId { get; set; }
+        public int? Weight { get; set; }
     }
 }

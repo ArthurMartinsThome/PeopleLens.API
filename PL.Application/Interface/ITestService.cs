@@ -1,4 +1,5 @@
-﻿using PL.Domain.Dto.TestFull;
+﻿using PL.Domain.Dto.CreateTestDto;
+using PL.Domain.Dto.TestFull;
 using PL.Domain.Model;
 using PL.Domain.Model.Filter;
 using PL.Infra.DefaultResult.Interface;
@@ -13,5 +14,6 @@ namespace PL.Application.Interface
         Task<IResult<int>> Insert(Test obj);
         Task<IResult<bool>> Update(Test obj);
         Task<IResult<TestFullResponseDto>> GetTestFull(int testId);
+        Task<IResult<bool>> CreateTest(TestCreateRequestDto obj);
     }
 }

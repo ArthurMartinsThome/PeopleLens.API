@@ -12,7 +12,9 @@ namespace PL.Adapter.PostgreSQL.Model
         public int? question_id { get; set; }
         [FilterIdentifier("Text")]
         public string? text { get; set; }
-        [FilterIdentifier("Value")]
-        public int? value { get; set; }
+        [FilterIdentifier("ResponseTypeProfileId")]
+        public int? responseTypeProfileId { get; set; }
+        [FilterIdentifier("Weight")]
+        public int? weight { get; set; }
     }
 }

@@ -19,14 +19,16 @@ namespace PL.Adapter.PostgreSQL.DataSource
         private const string _FieldId = "id";
         private const string _FieldQuestionId = "question_id";
         private const string _FieldText = "text";
-        private const string _FieldValue = "value";
+        private const string _FieldResponseTypeProfileId = "response_type_profile_id";
+        private const string _FieldWeight = "weight";
 
         private IEnumerable<string> _AllFields = new[]
         {
             $"\"{_TableName}\".\"{_FieldId}\"",
             $"\"{_TableName}\".\"{_FieldQuestionId}\"",
             $"\"{_TableName}\".\"{_FieldText}\"",
-            $"\"{_TableName}\".\"{_FieldValue}\""
+            $"\"{_TableName}\".\"{_FieldResponseTypeProfileId}\"",
+            $"\"{_TableName}\".\"{_FieldWeight}\""
         };
 
         private const string SearchSql = $@"
@@ -37,17 +39,15 @@ namespace PL.Adapter.PostgreSQL.DataSource
         private const string InsertSql = $@"
             INSERT INTO 
                 {_TableName}
-                ({_FieldQuestionId},{_FieldText},{_FieldValue})
+                ({_FieldQuestionId},{_FieldText},{_FieldResponseTypeProfileId},{_FieldWeight})
             VALUES
-                (@{_FieldQuestionId},@{_FieldText},@{_FieldValue})";
+                (@{_FieldQuestionId},@{_FieldText},@{_FieldResponseTypeProfileId},@{_FieldWeight})";
         private const string UpdateSql = $@"
             UPDATE 
                 {_TableName}
             SET
                 [fieldsandvalues]
             [where]";
-        private const string DeleteSql = $@"
-            DELETE FROM {_TableName} [where]";
 
         #endregion
 
@@ -58,7 +58,8 @@ namespace PL.Adapter.PostgreSQL.DataSource
                 Id = obj.id,
                 QuestionId = obj.question_id,
                 Text = obj.text,
-                Value = obj.value
+                ResponseTypeProfileId = obj.responseTypeProfileId,
+                Weight = obj.weight
             };
         }
         private Model.QuestionResponseOption Convert(Domain.Model.QuestionResponseOption obj)
@@ -68,7 +69,8 @@ namespace PL.Adapter.PostgreSQL.DataSource
                 id = obj.Id,
                 question_id = obj.QuestionId,
                 text = obj.Text,
-                value = obj.Value
+                responseTypeProfileId = obj.ResponseTypeProfileId,
+                weight = obj.Weight
             };
         }
 
@@ -135,8 +137,10 @@ namespace PL.Adapter.PostgreSQL.DataSource
                     updateList.Add(_FieldQuestionId, newObj.QuestionId);
                 if (oldObj.Text != newObj.Text)
                     updateList.Add(_FieldText, newObj.Text);
-                if (oldObj.Value != newObj.Value)
-                    updateList.Add(_FieldValue, newObj.Value);
+                if (oldObj.ResponseTypeProfileId != newObj.ResponseTypeProfileId)
+                    updateList.Add(_FieldResponseTypeProfileId, newObj.ResponseTypeProfileId);
+                if (oldObj.Weight != newObj.Weight)
+                    updateList.Add(_FieldWeight, newObj.Weight);
 
                 var parsedFilters = FilterParser.Parse<Model.QuestionResponseOption>(filters);
                 var result = await UpdateAsync(UpdateSql, updateList, parsedFilters);

@@ -27,8 +27,10 @@ namespace PL.Application.Service
                 filterList.Add(Filter.Create("Id", EOperator.Equal, new[] { filter.Id.Value }));
             if (filter.QuestionId.HasValue && filter.QuestionId > 0)
                 filterList.Add(Filter.Create("QuestionId", EOperator.Equal, filter.QuestionId.Value));
-            if (filter.ResponseOptionId.HasValue && filter.ResponseOptionId > 0)
-                filterList.Add(Filter.Create("ResponseOptionId", EOperator.Equal, filter.ResponseOptionId.Value));
+            if (filter.ResponseTypeProfileId.HasValue && filter.ResponseTypeProfileId > 0)
+                filterList.Add(Filter.Create("ResponseTypeProfileId", EOperator.Equal, filter.ResponseTypeProfileId.Value));
+            if (filter.Weight.HasValue && filter.Weight > 0)
+                filterList.Add(Filter.Create("Weight", EOperator.Equal, filter.Weight.Value));
             return filterList;
         }
 
@@ -90,8 +92,10 @@ namespace PL.Application.Service
                     newObj.QuestionId = obj.QuestionId;
                 if (!string.IsNullOrEmpty(obj.Text))
                     newObj.Text = obj.Text;
-                if (obj.Value != null && obj.Value > 0)
-                    newObj.Value = obj.Value;
+                if (obj.ResponseTypeProfileId != null && obj.ResponseTypeProfileId > 0)
+                    newObj.ResponseTypeProfileId = obj.ResponseTypeProfileId;
+                if (obj.Weight != null && obj.Weight > 0)
+                    newObj.Weight = obj.Weight;
 
                 var filters = GetFilters(new QuestionResponseOptionFilter() { Id = obj.Id });
                 return await _dataSource.Update(filters, oldObj, newObj);

@@ -91,8 +91,8 @@ namespace PL.Application.Service
 
                 if (obj.QuestionId != null && obj.QuestionId > 0)
                     newObj.QuestionId = obj.QuestionId;
-                if (obj.KeyConfigId != null && obj.KeyConfigId > 0)
-                    newObj.KeyConfigId = obj.KeyConfigId;
+                if (obj.KeyConfigurationQuestionId != null && obj.KeyConfigurationQuestionId > 0)
+                    newObj.KeyConfigurationQuestionId = obj.KeyConfigurationQuestionId;
                 if (!string.IsNullOrEmpty(obj.Value))
                     newObj.Value = obj.Value;
 

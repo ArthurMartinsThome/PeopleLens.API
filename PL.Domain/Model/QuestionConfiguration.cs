@@ -4,7 +4,7 @@
     {
         public int? Id { get; set; }
         public int? QuestionId { get; set; }
-        public int? KeyConfigId { get; set; }
+        public int? KeyConfigurationQuestionId { get; set; }
         public string? Value { get; set; }
 
         public object Clone() => this.MemberwiseClone();
