@@ -58,7 +58,7 @@ namespace PL.Adapter.PostgreSQL.DataSource
                 Id = obj.id,
                 QuestionId = obj.question_id,
                 Text = obj.text,
-                ResponseTypeProfileId = obj.responseTypeProfileId,
+                ResponseTypeProfileId = obj.response_type_profile_id,
                 Weight = obj.weight
             };
         }
@@ -69,7 +69,7 @@ namespace PL.Adapter.PostgreSQL.DataSource
                 id = obj.Id,
                 question_id = obj.QuestionId,
                 text = obj.Text,
-                responseTypeProfileId = obj.ResponseTypeProfileId,
+                response_type_profile_id = obj.ResponseTypeProfileId,
                 weight = obj.Weight
             };
         }

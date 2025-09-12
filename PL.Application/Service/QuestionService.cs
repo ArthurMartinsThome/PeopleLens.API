@@ -68,6 +68,7 @@ namespace PL.Application.Service
         {
             try
             {
+                obj.CreatedAt = obj.UpdatedAt = DateTime.UtcNow;
                 var result = await _dataSource.Insert(obj);
                 return result;
             }

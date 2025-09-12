@@ -18,7 +18,7 @@ namespace PL.Adapter.PostgreSQL.DataSource
         private const string _TableName = "question_configuration";
         private const string _FieldId = "id";
         private const string _FieldQuestionId = "question_id";
-        private const string _FieldKeyConfigId = "key_config_id";
+        private const string _FieldKeyConfigId = "key_configuration_question_id";
         private const string _FieldValue = "value";
 
         private IEnumerable<string> _AllFields = new[]

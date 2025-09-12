@@ -13,7 +13,7 @@ namespace PL.Adapter.PostgreSQL.Model
         [FilterIdentifier("Text")]
         public string? text { get; set; }
         [FilterIdentifier("ResponseTypeProfileId")]
-        public int? responseTypeProfileId { get; set; }
+        public int? response_type_profile_id { get; set; }
         [FilterIdentifier("Weight")]
         public int? weight { get; set; }
     }
