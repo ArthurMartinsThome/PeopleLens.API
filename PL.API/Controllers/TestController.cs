@@ -15,6 +15,14 @@ namespace PL.API.Controllers
             _testService = testService;
         }
 
+        [HttpGet()]
+        public async Task<IActionResult> GetTests()
+        {
+            var result = await _testService.Search(new Domain.Model.Filter.TestFilter());
+
+            return StatusCode(result.StatusCode.GetHashCode(), result);
+        }
+
         [HttpGet("test-full")]
         public async Task<IActionResult> getTestFull([FromQuery] int testId)
         {
