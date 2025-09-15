@@ -3,6 +3,7 @@
     public class PersonFilter
     {
         public int? Id { get; set; }
+        public List<int>? Ids { get; set; }
         public string? Name { get; set; }
         public DateTime? BirthDateFrom { get; set; }
         public DateTime? BirthDateTo { get; set; }

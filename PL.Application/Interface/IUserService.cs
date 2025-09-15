@@ -8,7 +8,7 @@ namespace PL.Application.Interface
     public interface IUserService
     {
         Task<IResult<Paged<Domain.Model.User>>> SearchPaged(UserFilter filter, int skip, int take);
-        Task<IResult<IEnumerable<Domain.Model.User>>> Search(UserFilter filter);
+        Task<IResult<IEnumerable<Domain.Model.User>>> Search(UserFilter filter, bool? fetchAll = false);
         Task<IResult<int>> Insert(Domain.Model.User obj);
         Task<IResult<bool>> Update(Domain.Model.User obj);
         Task<IResult<LoginResponseDto>> AuthenticateAsync(string username, string passwordHash);

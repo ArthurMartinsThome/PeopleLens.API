@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Mysqlx.Crud;
 using Org.BouncyCastle.Asn1.Ocsp;
 using PL.Adapter.PostgreSQL.DataSource;
 using PL.Adapter.PostgreSQL.Interface;
@@ -80,12 +81,14 @@ namespace PL.Application.Service
             }
         }
 
-        public async Task<IResult<IEnumerable<Domain.Model.User>>> Search(UserFilter filter)
+        public async Task<IResult<IEnumerable<Domain.Model.User>>> Search(UserFilter filter, bool? fetchAll = false)
         {
             try
             {
                 var filters = GetFilters(filter);
                 var result = await _dataSource.Search(filters);
+                if (fetchAll == true && result.Succeded && result.HasData)
+                    await FetchAllDependencies(result.Data, fetchAll);
                 return result;
             }
             catch (Exception ex)
@@ -134,8 +137,25 @@ namespace PL.Application.Service
                 if (!string.IsNullOrEmpty(obj.Password))
                     newObj.Password = obj.Password;
 
+                if (PL.Infra.Util.ObjectCompare.EqualObjects(oldObj, newObj))
+                {
+                    var resultPerson = await _personService.Update(obj.Person);
+                    if (!resultPerson.Succeded || !resultPerson.HasData || resultPerson.StatusCode != System.Net.HttpStatusCode.OK)
+                        return DefaultResult<bool>.Break("Erro ao atualizar a pessoa.");
+
+                    return DefaultResult<bool>.Create(true);
+                }
+
                 var filters = GetFilters(new UserFilter() { Id = obj.Id });
-                return await _dataSource.Update(filters, oldObj, newObj);
+                var result = await _dataSource.Update(filters, oldObj, newObj);
+                if(result.Succeded && result.HasData && result.StatusCode == System.Net.HttpStatusCode.OK)
+                {
+                    var resultPerson = await _personService.Update(obj.Person);
+                    if(!resultPerson.Succeded || !resultPerson.HasData || resultPerson.StatusCode != System.Net.HttpStatusCode.OK)
+                        return DefaultResult<bool>.Break("Erro ao atualizar a pessoa.");
+                }
+
+                return result;
             }
             catch (Exception ex)
             {
@@ -190,7 +210,7 @@ namespace PL.Application.Service
                     PersonId = personId,
                     Email = obj.Email,
                     Password = obj.Password,
-                    RoleId = obj.RoleId != null ? obj.RoleId : 3,
+                    RoleId = obj.RoleId != null ? (ERole)obj.RoleId : ERole.User,
                     StatusId = EStatus.Ativo
                 };
 
@@ -248,6 +268,42 @@ namespace PL.Application.Service
 
             var token = tokenHandler.CreateToken(tokenDescriptor);
             return tokenHandler.WriteToken(token);
+        }
+
+        private async Task FetchAllDependencies(IEnumerable<User> orderList, bool? fetchAll = false)
+        {
+            try
+            {
+                if (orderList == null || !orderList.Any()) return;
+                await FetchPerson(orderList, fetchAll);
+            }
+            catch (Exception ex)
+            {
+
+            }
+        }
+
+        private async Task FetchPerson(IEnumerable<User> objList, bool? fetchAll = false)
+        {
+            try
+            {
+                var searchObjList = await _personService.Search(new Domain.Model.Filter.PersonFilter()
+                {
+                    Ids = objList.Select(x => x.PersonId.Value).ToList()
+                });
+                if (searchObjList.Succeded && searchObjList.HasData)
+                {
+                    foreach (var item in objList)
+                    {
+                        var currentObj = searchObjList.Data.Where(x => x.Id.Value == item.PersonId).First();
+                        item.Person = currentObj;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
         }
     }
 }

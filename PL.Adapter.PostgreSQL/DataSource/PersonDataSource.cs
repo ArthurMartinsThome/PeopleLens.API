@@ -137,9 +137,9 @@ namespace PL.Adapter.PostgreSQL.DataSource
                 if (oldObj.Name != newObj.Name)
                     updateList.Add(_FieldName, newObj.Name?.Trim());
                 if (oldObj.Birthday != newObj.Birthday)
-                    updateList.Add(_FieldBirthday, newObj.Birthday);
+                    updateList.Add(_FieldBirthday, newObj.Birthday.Value.AddHours(4));
 
-                updateList.Add(_FieldUpdatedAt, DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss"));
+                updateList.Add(_FieldUpdatedAt, DateTime.UtcNow);
                 var parsedFilters = FilterParser.Parse<Model.Person>(filters);
                 var result = await UpdateAsync(UpdateSql, updateList, parsedFilters);
                 if (!result.Succeded)

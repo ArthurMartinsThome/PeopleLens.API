@@ -70,7 +70,7 @@ namespace PL.Adapter.PostgreSQL.DataSource
                 Password = obj.password,
                 CreatedAt = obj.created_at,
                 UpdatedAt = obj.updated_at,
-                RoleId = obj.role_id
+                RoleId = (ERole)obj.role_id
             };
         }
         private User Convert(Domain.Model.User obj)
@@ -84,7 +84,7 @@ namespace PL.Adapter.PostgreSQL.DataSource
                 password = obj.Password,
                 created_at = obj.CreatedAt,
                 updated_at = obj.UpdatedAt,
-                role_id = obj.RoleId
+                role_id = obj.RoleId.GetHashCode(),
             };
         }
 
@@ -156,7 +156,7 @@ namespace PL.Adapter.PostgreSQL.DataSource
                 if (oldObj.RoleId != newObj.RoleId)
                     updateList.Add(_FieldRoleId, newObj.RoleId);
 
-                updateList.Add(_FieldUpdatedAt, DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss"));
+                updateList.Add(_FieldUpdatedAt, DateTime.UtcNow);
                 var parsedFilters = FilterParser.Parse<Model.User>(filters);
                 var result = await UpdateAsync(UpdateSql, updateList, parsedFilters);
                 if (!result.Succeded)

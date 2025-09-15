@@ -21,7 +21,7 @@ namespace PL.API.Controllers
         [HttpGet]
         public async Task<IActionResult> Search([FromQuery] UserFilter filter)
         {
-            var result = await _userService.Search(filter);
+            var result = await _userService.Search(filter, true);
 
             return StatusCode(result.StatusCode.GetHashCode(), result);
         }

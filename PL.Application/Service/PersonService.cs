@@ -97,6 +97,9 @@ namespace PL.Application.Service
                 if (obj.Birthday != null && obj.Birthday > DateTime.MinValue)
                     newObj.Birthday = obj.Birthday;
 
+                if (PL.Infra.Util.ObjectCompare.EqualObjects(oldObj, newObj))
+                    return DefaultResult<bool>.Create(true);
+
                 var filters = GetFilters(new PersonFilter() { Id = obj.Id });
                 return await _dataSource.Update(filters, oldObj, newObj);
             }
