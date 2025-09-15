@@ -227,7 +227,7 @@ namespace PL.Application.Service
             }
         }
 
-        public async Task<IResult<bool>> CreateTest(TestCreateRequestDto obj)
+        public async Task<IResult<bool>> CreateTestFull(TestCreateRequestDto obj)
         {
             try
             {

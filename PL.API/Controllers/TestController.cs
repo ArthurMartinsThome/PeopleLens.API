@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using PL.Application.Interface;
 using PL.Domain.Dto.CreateTestDto;
 
@@ -6,6 +7,7 @@ namespace PL.API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class TestController : ControllerBase
     {
         private readonly ITestService _testService;
@@ -34,7 +36,7 @@ namespace PL.API.Controllers
         [HttpPost("create")]
         public async Task<IActionResult> CreateTest([FromBody] TestCreateRequestDto obj)
         {
-            var result = await _testService.CreateTest(obj);
+            var result = await _testService.CreateTestFull(obj);
 
             return StatusCode(result.StatusCode.GetHashCode(), result);
         }

@@ -6,7 +6,7 @@ namespace PL.Domain.Model.Filter
     {
         public int? Id { get; set; }
         public List<int>? Ids { get; set; }
-        public List<int?> StatusId { get; set; }
+        public List<int?>? StatusId { get; set; }
         public ERole? RoleId { get; set; }
         public int? PersonId { get; set; }
         public string? Email { get; set; }

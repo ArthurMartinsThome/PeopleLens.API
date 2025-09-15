@@ -14,6 +14,6 @@ namespace PL.Application.Interface
         Task<IResult<int>> Insert(Test obj);
         Task<IResult<bool>> Update(Test obj);
         Task<IResult<TestFullResponseDto>> GetTestFull(int testId);
-        Task<IResult<bool>> CreateTest(TestCreateRequestDto obj);
+        Task<IResult<bool>> CreateTestFull(TestCreateRequestDto obj);
     }
 }
